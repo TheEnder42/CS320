@@ -1,0 +1,160 @@
+the title for each book written by Stephen Hawking:
+select books.title from books, authors
+    where books.author_id = authors.author_id and
+    authors.lastname = 'Hawking' and authors.firstname = 'Stephen'
+
+                     TITLE
+--------------------------
+   A Brief History of Time
+The Universe in a Nutshell
+ A Briefer History of Time
+          The Grand Design
+OK (4 rows(s))
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+the title and year of publishing for each book written by Douglas Adams:
+select books.title, books.published from books, authors
+where books.author_id = authors.author_id and
+          authors.lastname = 'Adams' and authors.firstname = 'Douglas';
+
+                                    TITLE PUBLISHED
+----------------------------------------- ---------
+     The Hitchhiker's Guide to the Galaxy      1979
+The Restaurant at the End of the Universe      1980
+        Life, The Universe and Everything      1982
+     So Long, and Thanks for all the Fish      1984
+OK (4 rows(s))
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+the author’s name (first and last), the ISBN, and the year published for the book with the title “Something Under the Bed is Drooling”:
+select authors.firstname, authors.lastname, books.published, books.isbn from books, authors
+where books.author_id = authors.author_id 
+and books.title = 'Something Under the Bed is Drooling';
+
+FIRSTNAME  LASTNAME PUBLISHED          ISBN
+--------- --------- --------- -------------
+     Bill Watterson      1988 0-836-21825-6
+OK (1 rows(s))
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+all of the authors for “The Complete Monty Python’s Flying Circus; All the Words, Volume 1”:
+select authors.firstname, authors.lastname from books, authors where
+books.author_id = authors.author_id 
+and books.title = 'The Complete Monty Python''s Flying Circus; All the Words, Volume 1';
+
+FIRSTNAME LASTNAME
+--------- --------
+   Graham  Chapman
+     John   Cleese
+    Terry  Gilliam
+     Eric     Idle
+    Terry    Jones
+  Michael    Palin
+OK (6 rows(s))
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+the title and author for each of Berkeley Breathed’s and Bill Watterson’s books, sorted in ascending order by title:
+select authors.firstname, authors.lastname, books.title from books, authors where
+books.author_id = authors.author_id and ((authors.firstname = 'Berkeley' and authors.lastname = 'Breathed')
+OR (authors.firstname = 'Bill' and authors.lastname = 'Watterson'))
+ORDER BY title ASC;
+
+FIRSTNAME  LASTNAME                                                            TITLE
+--------- --------- ----------------------------------------------------------------
+     Bill Watterson          Attack of the Deranged Mutant Killer Monster Snow Goons
+     Bill Watterson                                                Calvin and Hobbes
+ Berkeley  Breathed                 Penguin Dreams and Stranger Things: Bloom County
+     Bill Watterson Scientific Progress Goes 'Boink': A Calvin and Hobbes Collection
+     Bill Watterson                              Something Under the Bed is Drooling
+ Berkeley  Breathed                         Tales Too Ticklish to Tell: Bloom County
+OK (6 rows(s))
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+the author(s) and title for each book with the word “Time” or “Universe” in the title, sorted in ascending order by lastname, and then ascending by title:
+select authors.firstname, authors.lastname, books.title from books, authors where
+books.author_id = authors.author_id and
+(books.title LIKE '%Time%' OR books.title LIKE '%Universe%')
+ORDER BY lastname ASC, title ASC;
+
+FIRSTNAME LASTNAME                                     TITLE
+--------- -------- -----------------------------------------
+  Douglas    Adams         Life, The Universe and Everything
+  Douglas    Adams The Restaurant at the End of the Universe
+  Stephen  Hawking                   A Brief History of Time
+  Stephen  Hawking                 A Briefer History of Time
+  Stephen  Hawking                The Universe in a Nutshell
+  Leonard Mlodinow                 A Briefer History of Time
+OK (6 rows(s))
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+attempt to insert a new book into the books table, with an author_id that does not appear in the authors table (this attempt should fail, due to specifying an invalid foreign key for author_id):
+insert into books (author_id, title, isbn, published) VALUES (15, 'how to eat a bear', '0-457-58257-5', 2020);
+
+Error: INSERT on table 'BOOKS' caused a violation of foreign key constraint 'SQL170315230531640' for key (15).  The statement has been rolled back.
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+insert yourself as a new author in the the authors table (do not specify an author_id, Derby will do that for you, since author_id is the auto-generated primary key for the authors table):
+
+insert into authors (firstname, lastname) values ('Matt', 'Ritchie');
+OK (0 rows(s))
+
+insert into books (author_id, title, isbn, published) VALUES (15, 'how to eat a bear', '0-457-58257-5', 2020);
+OK (0 rows(s))
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+retrieve the author_id from the authors table for your entry and insert a new book into the books table, using your author_id:
+
+select authors.author_id from authors where
+authors.firstname = 'Matt' and authors.lastname = 'Ritchie';
+
+AUTHOR_ID
+---------
+       15
+OK (1 rows(s))
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+now retrieve all of the information for your book (title, ISBN, published, lastname, firstname):
+
+select * from books, authors where books.author_id = authors.author_id and
+    authors.lastname = 'Ritchie' and authors.firstname = 'Matt';
+
+BOOK_ID AUTHOR_ID             TITLE          ISBN PUBLISHED AUTHOR_ID LASTNAME FIRSTNAME
+------- --------- ----------------- ------------- --------- --------- -------- ---------
+     34        15 how to eat a bear 0-457-58257-5      2020        15  Ritchie      Matt
+OK (1 rows(s))
+
+
+
+
+
+
+
